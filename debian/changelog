@@ -1,0 +1,91 @@
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-5) unstable; urgency=medium
+
+   [ Thomas Goirand ]
+   * Apply patch from Kaminskiy for SSE runtime detection (Closes: #921874).
+     Thanks to him, and see below for details.
+
+   [ Yuriy M. Kaminskiy ]
+   * Fix i386 simd compilation.
+   * Fix runtime cpudetection.
+   * Fix neon for armhf.
+   * Run complete test suite under qemu.
+
+  [ Ondřej Nový ]
+  * Removing gbp.conf, not used anymore or should be specified in the
+    developers dotfiles
+  * Use debhelper-compat instead of debian/compat.
+
+ -- Thomas Goirand <zigo@debian.org>  Tue, 16 Nov 2021 15:06:51 +0100
+
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-3) unstable; urgency=medium
+
+  * remove patch: 0001-temporarily-disable-sse3-and-above.patch (Closes: #899296)
+  * use qemu-user-static to test program without SIMD
+  * update libgf-complete1.symbols after enable sse3/sse4
+  * update compat and debhelper to 10
+  * drop unnecessary autoconf Build-Depends
+  * drop unnecessary dh-argument --parallel
+  * update Standards-Version to 4.1.4(no changes)
+  * change Maintainer to Debian OpenStack team, and add myself to Uploaders
+
+ -- Shengjing Zhu <i@zhsj.me>  Tue, 22 May 2018 21:43:40 +0800
+
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-2) unstable; urgency=medium
+
+  * Team upload.
+
+  * d/libgf_complete1.symbols: fix arch dependent symbols.
+  * d/rules: use default.mk instead of manually parse changelog.
+  * d/rules: disable SIMD on 32bit(sse on i386, neon on armel/armhf)
+    it failed to build and buggy in runtime detection.
+  * Add d/patches/0001-temporarily-disable-sse3-and-above.patch.
+    Disable SSE3+ on amd64 (Closes: #894670).
+    Signed-off-by: Shengjing Zhu <i@zhsj.me>
+
+ -- Shengjing Zhu <i@zhsj.me>  Tue, 03 Apr 2018 21:00:31 +0800
+
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-1) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Ondřej Nový ]
+  * Fixed VCS URLs (https).
+
+  [ Thomas Goirand ]
+  * Changed the section of gf-complete-tools from libs to math.
+    (Closes: #870357)
+
+  [ Shengjing Zhu ]
+  * New upstream snapshot.
+  * drop not use sse patch, gf-complete supports runtime simd detection now.
+  * update libgf_complete1.symbols.
+  * update Standards-Version to 4.1.3, changing Priority to optional.
+  * move global-files-wildcard to first paragraph in dep5 copyright.
+  * use https in dep5 copyright format url.
+  * run wrap-and-sort -bast.
+  * move Vcs-Git/Vcs-Browser to salsa.d.o.
+
+ -- Shengjing Zhu <i@zhsj.me>  Thu, 29 Mar 2018 15:47:59 +0000
+
+gf-complete (1.0.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Resync with Ubuntu.
+  * Updates for Ubuntu MIR:
+    - d/control,copyright: Update upstream location to jerasure.org.
+    - d/rules: Enable parallel build.
+    - d/rules: Enable unit test execution.
+    - d/control: Add Multi-Arch: same for libgf-complete{1,-dev}.
+    - d/control: Add gf-complete-tools package, providing misc
+      tooling for using/testing gf-complete based solutions such
+      as jerasure.
+  * d/control: Bumped Standards-Version to 3.9.6, no changes.
+  * d/copyright: Switch BSD -> BSD-3-clause.
+
+ -- James Page <james.page@ubuntu.com>  Thu, 17 Sep 2015 12:16:10 +0100
+
+gf-complete (1.0.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #750713).
+
+ -- Thomas Goirand <zigo@debian.org>  Sun, 25 May 2014 16:35:49 +0800

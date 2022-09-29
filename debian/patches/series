@@ -1,0 +1,5 @@
+0001-Fix-compilation-on-i386.patch
+0002-Fix-runtime-cpudetection.patch
+0003-Enable-runtime-cpudetection-on-i386.patch
+0004-Merge-back-unneeded-libgf_util.la.patch
+0007-hack-to-run-testsuite-in-qemu.patch

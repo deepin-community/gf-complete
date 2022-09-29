@@ -1,0 +1,64 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/default.mk
+
+UPSTREAM_GIT    ?= http://lab.jerasure.org/jerasure/gf-complete.git
+
+GIT_TAG         ?= $(shell echo '$(DEB_VERSION_UPSTREAM)' | sed -e 's/~/_/')
+
+ifeq ($(DEB_HOST_ARCH), amd64)
+QEMU_ARCH=x86_64
+# omitted: sse2 (always on amd64), sse3 (not used)
+QEMU_CPUS=qemu64,-ssse3,-sse4.1,-sse4.2,-pclmulqdq
+endif
+
+ifeq ($(DEB_HOST_ARCH), i386)
+QEMU_ARCH=i386
+# omitted: sse3 (not used)
+QEMU_CPUS=qemu32,-sse2,-ssse3,-sse4.1,-sse4.2,-pclmulqdq
+endif
+
+ifeq ($(DEB_HOST_ARCH), armhf)
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+ifeq (neon,$(shell grep -o -w -h -m 1 neon /proc/cpuinfo 2>/dev/null))
+	$(warning NEON detected on the build host, arm-without-neon configuration was not tested)
+else
+QEMU_ARCH=arm
+QEMU_CPUS=cortex-a8
+endif
+endif
+endif
+
+%:
+	dh $@  --with autoreconf
+
+ifneq (,$(QEMU_ARCH))
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+override_dh_auto_test:
+	dh_auto_test
+	set -ex; C=$(QEMU_ARCH); c=$(QEMU_CPUS); p=X; \
+	while test "$$p" != "$$c"; do \
+		export QEMU_CMD="$(CURDIR)/libtool --mode=execute qemu-$$C-static -cpu $$c " ; \
+		dh_auto_test; \
+		p="$$c"; \
+		c="`echo $$c|sed 's/,-/,+/'`"; \
+	done
+endif
+endif
+
+override_dh_install:
+	dh_install
+	# NOTE(jamespage): Don't ship example binaries, just the actual tools
+	rm -rf $(CURDIR)/debian/gf-complete-tools/usr/bin/gf_example*
+
+gen-orig-xz:
+	git tag -v $(GIT_TAG) || true
+	if [ ! -f ../$(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM).orig.tar.xz ] ; then \
+		git archive --prefix=$(DEB_SOURCE)-$(DEB_VERSION_UPSTREAM)/ $(GIT_TAG) | xz >../$(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM).orig.tar.xz ; \
+	fi
+	[ ! -e ../build-area ] && mkdir ../build-area || true
+	[ ! -e ../build-area/$(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM).orig.tar.xz ] && cp ../$(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM).orig.tar.xz ../build-area
+
+fetch-upstream-remote:
+	git remote add upstream $(UPSTREAM_GIT) || true
+	git fetch upstream
