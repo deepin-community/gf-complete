@@ -1,3 +1,31 @@
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-9) unstable; urgency=medium
+
+  [ Shengjing Zhu ]
+  * Reenable non-SSE4 tests.
+  * Build with -O1 (Closes: #1012935)
+    To ensure gcc-12 won't optimize itself to generate SSE instruction.
+    All SSE optimizations are implemented manually with runtime dispatch.
+
+ -- Thomas Goirand <zigo@debian.org>  Tue, 11 Oct 2022 09:21:54 +0200
+
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-8) unstable; urgency=medium
+
+  * Disabling non-SSE 4 tests, as they FTBFS with GCC 12 (Closes: #1012935).
+
+ -- Thomas Goirand <zigo@debian.org>  Wed, 31 Aug 2022 11:12:40 +0200
+
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-7) unstable; urgency=medium
+
+  * Fix long description (Closes: #999782).
+
+ -- Thomas Goirand <zigo@debian.org>  Tue, 28 Dec 2021 19:21:55 +0100
+
+gf-complete (1.0.2+2017.04.10.git.ea75cdf-6) unstable; urgency=medium
+
+  * Reverse previous changes, as it broke build on Arm.
+
+ -- Thomas Goirand <zigo@debian.org>  Thu, 18 Nov 2021 10:47:05 +0100
+
 gf-complete (1.0.2+2017.04.10.git.ea75cdf-5) unstable; urgency=medium
 
    [ Thomas Goirand ]
